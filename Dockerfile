@@ -16,7 +16,6 @@ RUN echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
     apt-key fingerprint ABF5BD827BD9BF62 && \
     apt update && apt install nginx
 
-RUN systemctl enable nginx 
 
 COPY start.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/start.sh

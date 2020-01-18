@@ -1,4 +1,4 @@
 !/bin/bash
 set -e
 
-systemctl start nginx
+service nginx start
