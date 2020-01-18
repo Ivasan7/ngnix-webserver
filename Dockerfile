@@ -11,6 +11,12 @@ RUN  apt-get install -y \
 	git \
 	wget
 
+RUN echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
+    | tee /etc/apt/sources.list.d/nginx.list && \
+    curl -fsSL https://nginx.org/keys/nginx_signing.key |  apt-key add - && \
+    apt-key fingerprint ABF5BD827BD9BF62 && \
+    apt update && apt install nginx
+
 #Install libraries for dynamic modules
 RUN apt-get install -y \
 	libgeoip-dev \
@@ -46,15 +52,12 @@ RUN cd /opt && git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-ngi
 	make modules && \
 	cp objs/ngx_http_modsecurity_module.so /etc/nginx/modules/
 
+#TODO
+#Load at /etc/nginx/nginx.conf after PID
+#load_module /etc/nginx/modules/ngx_http_modsecurity_module.so;
 
-#Install NGNIX
-
-RUN echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
-    | tee /etc/apt/sources.list.d/nginx.list && \
-    curl -fsSL https://nginx.org/keys/nginx_signing.key |  apt-key add - && \
-    apt-key fingerprint ABF5BD827BD9BF62 && \
-    apt update && apt install nginx
-
+COPY modsecurity.conf-recommended /etc/nginx/modsecurity/modsecurity.conf
+COPY unicode.mapping /etc/nginx/modsecurity/unicode.mapping
 
 COPY start.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/start.sh
