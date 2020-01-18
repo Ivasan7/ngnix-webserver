@@ -8,7 +8,8 @@ RUN  apt-get install -y \
 	gnupg \
 	systemd \ 
 	apache2-utils \
-	git
+	git \
+	wget
 
 #Install libraries for dynamic modules
 RUN apt-get install -y \
@@ -34,6 +35,17 @@ RUN cd ModSecurity && \
 	./configure && \
 	make && \
 	make install
+
+# Build Dynamic Module
+RUN cd /opt && git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git && \
+	b=$(nginx -v 2>&1) && VERSION=$(echo $b | grep -o -E '[0-9].+') && \
+	wget http://nginx.org/download/nginx-${VERSION}.tar.gz && \
+	tar zxvf nginx-${VERSION}.tar.gz && \
+	cd nginx-${VERSION} && \
+	./configure --with-compat --add-dynamic-module=../ModSecurity-nginx && \
+	make modules && \
+	cp objs/ngx_http_modsecurity_module.so /etc/nginx/modules/
+
 
 #Install NGNIX
 
