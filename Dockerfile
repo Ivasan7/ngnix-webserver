@@ -55,6 +55,8 @@ RUN cd /opt && git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-ngi
 #TODO
 #Load at /etc/nginx/nginx.conf after PID
 #load_module /etc/nginx/modules/ngx_http_modsecurity_module.so;
+RUN sed -i '/pid* /a #Load\nload_module /etc/nginx/modules/ngx_http_modsecurity_module.so;'  /etc/nginx/nginx.conf
+
 
 COPY modsecurity.conf-recommended /etc/nginx/modsecurity/modsecurity.conf
 COPY unicode.mapping /etc/nginx/modsecurity/unicode.mapping
