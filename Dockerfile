@@ -18,4 +18,8 @@ RUN echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
 
 RUN systemctl enable nginx 
 
+COPY start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh
+RUN ln -s /usr/local/bin/start.sh
 
+ENTRYPOINT["start.sh"]
