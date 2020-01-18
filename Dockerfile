@@ -21,4 +21,12 @@ COPY start.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/start.sh
 RUN ln -s /usr/local/bin/start.sh
 
+#NGINX settings
+
+COPY 404.html /usr/share/nginx/html/404.html
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+RUN service nginx reload
+
+
 ENTRYPOINT["start.sh"]
