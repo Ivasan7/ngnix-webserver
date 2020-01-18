@@ -1,6 +1,19 @@
 FROM ubuntu:18.04
 
 RUN apt-get -y update &&  apt-get -y upgrade
-RUN  apt-get install -y vim
+RUN  apt-get install -y \
+	vim \
+	curl \
+	lsb-core \
+	gnupg
+
+#Install NGNIX
+
+RUN echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
+    | tee /etc/apt/sources.list.d/nginx.list && \
+    curl -fsSL https://nginx.org/keys/nginx_signing.key |  apt-key add - && \
+    apt-key fingerprint ABF5BD827BD9BF62 && \
+    apt update && apt install nginx
+   
 
 
