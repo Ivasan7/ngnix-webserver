@@ -6,7 +6,8 @@ RUN  apt-get install -y \
 	curl \
 	lsb-core \
 	gnupg \
-	systemd
+	systemd \ 
+	apache2-utils
 
 #Install NGNIX
 
@@ -25,7 +26,7 @@ RUN ln -s /usr/local/bin/start.sh
 
 COPY 404.html /usr/share/nginx/html/404.html
 COPY default.conf /etc/nginx/conf.d/default.conf
-
+# PWD generation : htpasswd -c /etc/nginx/.htpasswd admin
 RUN service nginx reload
 
 
