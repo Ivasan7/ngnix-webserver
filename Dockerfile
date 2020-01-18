@@ -5,7 +5,8 @@ RUN  apt-get install -y \
 	vim \
 	curl \
 	lsb-core \
-	gnupg
+	gnupg \
+	systemd
 
 #Install NGNIX
 
@@ -14,6 +15,7 @@ RUN echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
     curl -fsSL https://nginx.org/keys/nginx_signing.key |  apt-key add - && \
     apt-key fingerprint ABF5BD827BD9BF62 && \
     apt update && apt install nginx
-   
+
+RUN systemctl enable nginx 
 
 
