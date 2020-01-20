@@ -95,8 +95,10 @@ RUN cd /etc/nginx/modsecurity && \
 	for f in $(ls -1 owasp-modsecurity-crs/rules/ | grep -E "^(RESPONSE|REQUEST)-.*\.conf$"); do \
   	echo "include owasp-modsecurity-crs/rules/${f}" >> modsecurity_includes.conf; done
 
-
-
-
+#RUN yum install -y certbot-nginx 
+#Create server config
+#certbot --nginx -d chord.tools -d www.chord.tools
+# /etc/sysconfig/certbot : POST_HOOK="--post-hook 'systemctl reload nginx'"
+# start certbot-renew service, start certbot renew timer service
 
 ENTRYPOINT["start.sh"]
