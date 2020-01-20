@@ -82,4 +82,21 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 RUN service nginx reload
 
 
+RUN cd /etc/nginx/modsecurity && \
+	git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git && \
+	cd owasp-modsecurity-crs && \
+	cp crs-setup.conf{.example,} && \
+	cp rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf{.example,} && \
+	cp rules/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf{.example,}
+
+RUN cd /etc/nginx/modsecurity && \
+	echo "include modsecurity.conf" >> modsecurity_includes.conf && \
+	echo "include owasp-modsecurity-crs/crs-setup.conf" >> modsecurity_includes.conf && \
+	for f in $(ls -1 owasp-modsecurity-crs/rules/ | grep -E "^(RESPONSE|REQUEST)-.*\.conf$"); do \
+  	echo "include owasp-modsecurity-crs/rules/${f}" >> modsecurity_includes.conf; done
+
+
+
+
+
 ENTRYPOINT["start.sh"]
