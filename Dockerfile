@@ -42,6 +42,7 @@ RUN cd ModSecurity && \
 	make && \
 	make install
 
+
 # Build Dynamic Module
 RUN cd /opt && git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git && \
 	b=$(nginx -v 2>&1) && VERSION=$(echo $b | grep -o -E '[0-9].+') && \
@@ -100,5 +101,16 @@ RUN cd /etc/nginx/modsecurity && \
 #certbot --nginx -d chord.tools -d www.chord.tools
 # /etc/sysconfig/certbot : POST_HOOK="--post-hook 'systemctl reload nginx'"
 # start certbot-renew service, start certbot renew timer service
+
+#Install and use ngx_pagespeed dynamic module
+# Todo: get version as ENV var
+RUN cd /opt && bash <(curl -f -L -sS https://ngxpagespeed.com/install) -b . --dynamic-module --ngx-pagespeed-version latest-stable && \
+	cd nginx-${VERSIOn} && \
+	/configure --with-compat --add-dynamic-module=../incubator-pagespeed-ngx-latest-stable && \
+	make modules && \
+	cp objs/ngx_pagespeed.so /etc/nginx/modules/
+
+
+
 
 ENTRYPOINT["start.sh"]
